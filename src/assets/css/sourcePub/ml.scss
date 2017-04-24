@@ -1,0 +1,203 @@
+.miandzyfb {
+    .mlAndZyfuBoxRight {
+        width: 15.15rem;
+        height: 7.5rem;
+        //background-color: red;
+        margin: 0;
+        padding: 0;
+    }
+    .mlAndZyfuBoxRightL {
+        width: 2.9rem;
+        height: 7.5rem;
+        //  background-color: yellow;
+        float: left;
+        padding: 0.15rem;
+        
+    }
+    .mlAndZyfuBoxRightR {
+        width: 11.4rem;
+        height: 7.5rem;
+        //background-color: #067197;
+        float: left;
+        padding: 0;
+        margin: 0;
+        padding-left: 0.5rem;
+        .zwsjBox{
+            width: 11.4rem;
+            height: 7.5rem;
+            top: 0;
+            position: absolute;
+            background-color: rgb(13,21,47);
+            .zwsjImg{
+            width: 3.88rem;
+            height: 2.87rem;
+            text-align: center;
+            img{
+               width: 1.88rem;
+               height: 1.87rem;
+               margin-left: 0.4rem;
+            }
+             p{
+                 width: 3.88rem;
+                 height: 1rem;
+                 font-size: 0.18rem;
+                 color: rgb(0,187,236);
+             }
+            
+        }
+        }
+    }
+    .moBoxml {
+        width: 19.20rem;
+    height: 9.60rem;
+    position: absolute;
+    background-color: rgba(13,21,47,0.8);
+    //background-color: red;
+    margin-top: -9rem;
+    margin-left: -3rem;
+    
+            -webkit-filter: blur(10px);
+        -moz-filter: blur(10px);
+        -ms-filter: blur(10px);
+        -ms-filter: blur(10px);
+        filter:blur(10px);
+    }
+    .wrapdataBox {
+        background-size: 100% 100%;
+        background-color: #0d152f;
+        width: 100%;
+        height: 100%;
+    }
+    .hand {
+        cursor: pointer;
+    }
+    h4 {
+        padding: 0;
+        margin: 0;
+        height: 0.4rem;
+        width: 11.88rem;
+        font-size: 0.16rem;
+        margin-left: 5rem;
+        //  top: 0.2rem;
+        color: rgba(0, 186, 236, 0.90);
+        line-height: 0.4rem;
+        span{
+            float: left;
+        }
+        img {
+            margin-left: 0.1rem;
+             margin-top: 0.1rem;
+             height:0.2rem ;
+             float: left;
+        }
+    }
+    .mlAndZyfuBoxRightRMian {
+        width: 11.88rem;
+        height: 4rem;
+        // background-color: red;
+    }
+    .bqnewBox {
+        width: 14.88rem;
+        height: 4rem;
+        padding: 0;
+        margin: 0;
+    }
+    .btnfb {
+        width: 1.2rem;
+        height: 0.3rem;
+        float: right;
+        margin-top: -0.5rem;
+        margin-right: 0.5rem;
+        padding: 0;
+        background: rgba(15,38,66,1);
+        border: 1px solid #01172F;
+        font-size: 14px;
+        font-size: 16px;
+        color: rgba(0, 186, 236, 0.90);
+        text-align: center;
+        line-height: 0.3rem;
+        .el-loading-mask {
+            background-color: rgba(13,44,77,1)!important;
+        }
+        .el-loading-spinner .circular {
+            width: 0.2rem;
+        }
+    }
+    .btnfb:hover {
+        border: 1px solid #087193;
+        box-shadow: inset 0 0 10px 0 rgba(98, 208, 248, 0.42);
+        border-radius: 1px;
+    }
+    .fgczBox {
+        background-color: rgba(13, 21, 47, 0.7);
+        width: 19.20rem;
+        height: 9.60rem;
+        margin-left: -3.2rem;
+        margin-top: -1.5rem;
+        z-index: 100;
+    }
+    .fb,
+    .tsxx,
+    .tsk {
+        width: 400px;
+        height: 200px;
+        //background: url(../../img/data/modal/tcbgzz.png);
+        background: url("../../assets/img/modal/tcbgzz.png");
+        background-size: 100% 100%!important;
+        background-color: rgba(12, 38, 66, .5);
+        position: absolute;
+        font-size: 14px;
+        color: #0396c2;
+        p {
+            width: 340px;
+            height: 80px;
+          margin-top: 20px;
+            text-align: center;
+            font-size: 0.16rem;
+//          line-height: 80px;
+            line-height: 0.4rem;
+            padding: 10px 30px 0 30px;
+        }
+        ul {
+            //margin-left: 100px;
+            width: 400px;
+            height: 100px;
+            /*padding: 1rem；*/
+            color: #fff;
+            li {
+                float: left;
+                color: #fff;
+                width: 60px;
+                height: 25px;
+                margin-left: 70px;
+                background: #0C1A34;
+                border-radius: 0;
+                line-height: 24px;
+                text-align: center;
+                border: 1px solid #0C1A34;
+            }
+            li:hover {
+                border: 1px solid #05bde6;
+                color: #fff;
+                box-shadow: inset 0 0 10px 0 rgba(98, 208, 248, 0.42);
+            }
+            /*li:nth-child(2) {
+                background-color: #05bde6;
+            }*/
+        }
+    }
+    .tsk{
+        ul{
+            li{
+                margin-left: 120px;
+            }
+        }
+    }
+}
+@media screen and (max-width: 1280px) {
+    .bqnewBox {
+        margin-top: 0.5rem;
+        //background-color: #11B95C;
+        position: absolute;
+    }
+}

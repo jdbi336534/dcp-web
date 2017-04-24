@@ -1,0 +1,745 @@
+<template>
+    <div class="s-apply">
+        <apply-pop ref="applyPop"></apply-pop>
+        <div class="z-top-out" v-if="tab_db.active">
+            <div class="apply" @click="handleApply">
+                <img class="z-icon" src="../../assets/img/serve/z-icon1.png" alt="">数据申请
+            </div>
+            <div class="searchgroup">
+                <div class="group g1">
+                    <el-select v-model="searchDataVal" placeholder="请选择" @change="">
+                        <el-option v-for="item in searchDbType" :label="item.label" :value="item.id" :key="item.id">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="group g2">
+                    <input type="text" placeholder="请选择" v-model="searchDbText">
+                </div>
+                <div class="group g3" @click="topSearch('db')"><i class="el-icon-search"></i></div>
+            </div>
+        </div>
+        <div class="z-top-out" v-else>
+            <div class="apply" @click="handleApply">
+                <img class="z-icon" src="../../assets/img/serve/z-icon1.png" alt="">文件申请
+            </div>
+            <div class="searchgroup">
+                <div class="group g1">
+                    <el-select v-model="searchFileVal" placeholder="请选择" @change="">
+                        <el-option v-for="item in searchTypeFile" :label="item.label" :value="item.id" :key="item.id">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="group g2">
+                    <input type="text" placeholder="请选择" v-model="searchTypeText">
+                </div>
+                <div class="group g3" @click="topSearch('file')"><i class="el-icon-search"></i></div>
+            </div>
+        </div>
+        <div class="part_left">
+            <div class="header">
+                <el-select class="t1" v-model="orgMode" placeholder="请选择" @change="orgModeSelect">
+                    <el-option v-for="item in orgModeList" :label="item.themeName" :value="item.id" :key="item.id">
+                    </el-option>
+                </el-select>
+                <div class="t2">
+                    <input type="text" class="ipt" v-model="catalogText" placeholder="请输入" @keyup.enter="searchCatalog">
+                    <el-button class="btn" type="text" @click="searchCatalog"><i class="el-icon-search"></i></el-button>
+                </div>
+            </div>
+            <div class="con">
+                <div class="menu_type">
+                    <el-tree :data="dataTree" :props="defaultProps" highlight-current :filter-node-method="filterNode" ref="tree" @node-click="handleNodeClick"></el-tree>
+                </div>
+            </div>
+        </div>
+        <div class="part_right">
+            <div class="tab_head">
+                <div :class="tab_db" @click="clickTab('db')">数据库</div>
+                <div :class="tab_file" @click="clickTab('file')">文件</div>
+            </div>
+            <div class="tab_con">
+                <div :class="tab_db">
+                    <div class="tab_table">
+                        <el-table :data="db.tableList" height="100%" border v-loading="tableLoading" style="width: 100%;height:100%;" @expand="expandFunc" element-loading-text="拼命加载中">
+                            <el-table-column type="expand">
+                                <template scope="props">
+                                    <div class="innertable">
+                                        <el-table :data="props.row.columnList" style="width: 100%">
+                                            <el-table-column prop="businessColumnName" label="字段名称">
+                                            </el-table-column>
+                                            <el-table-column prop="dataType" label="数据类型">
+                                            </el-table-column>
+                                            <el-table-column prop="dataLength" label="数据长度">
+                                            </el-table-column>
+                                            <el-table-column prop="dataPrecision" label="数据精度">
+                                            </el-table-column>
+                                            <el-table-column prop="dataNotNull" label="是否非空">
+                                            </el-table-column>
+                                            <el-table-column prop="businessComputationRule" label="业务计算规则">
+                                            </el-table-column>
+                                            <el-table-column prop="itComputationRule" label="IT计算规则">
+                                            </el-table-column>
+                                            <el-table-column label="收藏">
+                                                <template scope="scopes">
+                                                    <div class="store" @click="markSingle(scopes.row)">
+                                                        <img src="../../assets/img/serve/checked.png" v-if="scopes.row.delState=='F'">
+                                                        <img src="../../assets/img/serve/uncheck.png" v-else>
+                                                    </div>
+                                                </template>
+                                            </el-table-column>
+                                        </el-table>
+                                    </div>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="中文名">
+                                <template scope="scope">
+                                    {{scope.row.cnName}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="英文名">
+                                <template scope="scope">
+                                    {{scope.row.enName}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="简称">
+                                <template scope="scope">
+                                    {{scope.row.shortName}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="表名称">
+                                <template scope="scope">
+                                    {{scope.row.tableName}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="业务名称">
+                                <template scope="scope">
+                                    {{scope.row.businessTableName}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="提供方">
+                                <template scope="scope">
+                                    {{scope.row.ownerUserName}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="收藏">
+                                <template scope="scope">
+                                    <div class="store" @click="markAll(scope.row)">
+                                        <img src="../../assets/img/serve/uncheck.png" v-if="scope.row.storeState==0">
+                                        <img src="../../assets/img/serve/halfcheck.png" v-else-if="scope.row.storeState==1">
+                                        <img src="../../assets/img/serve/checked.png" v-else>
+                                    </div>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                    <div class="tab_fenye">
+                        <el-pagination @current-change="handleCurrentChange" :current-page="db.pageNum" :page-size="db.pagesize" layout="total,  prev, pager, next, jumper" :total="db.pagetotal">
+                        </el-pagination>
+                    </div>
+                </div>
+                <div :class="tab_file">
+                    <div class="tab_table">
+                        <el-table :data="file.tableList" height="100%" border v-loading="tableLoading" style="width: 100%;height:100%;" @expand="expandFunc" element-loading-text="拼命加载中">
+                            <el-table-column label="中文名" prop="cnName"></el-table-column>
+                            <el-table-column label="英文名" prop="enName"></el-table-column>
+                            <el-table-column label="简称" prop="shortName"></el-table-column>
+                            <el-table-column label="表名称" prop="tableName"></el-table-column>
+                            <el-table-column label="业务名称" prop="businessTableName"></el-table-column>
+                            <el-table-column label="提供方" prop="ownerUserName"></el-table-column>
+                            <el-table-column label="收藏">
+                                <template scope="scope">
+                                    <div class="store" @click="markAll(scope.row)">
+                                        <img src="../../assets/img/serve/uncheck.png" v-if="scope.row.storeState==0">
+                                        <img src="../../assets/img/serve/halfcheck.png" v-else-if="scope.row.storeState==1">
+                                        <img src="../../assets/img/serve/checked.png" v-else>
+                                    </div>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                    <div class="tab_fenye">
+                        <el-pagination @current-change="handleCurrentChange" :current-page="file.pageNum" :page-size="file.pagesize" layout="total,  prev, pager, next, jumper" :total="file.pagetotal">
+                        </el-pagination>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<style lang="scss">
+@import '../../assets/css/colors.scss';
+.s-apply {
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+    .no {
+        display: none;
+    }
+    .z-top-out {
+        position: absolute;
+        top: -7.4%;
+        right: 8%;
+        height: 6%;
+        width: 480px;
+        z-index: 999;
+        .apply {
+            position: absolute;
+            top: 50%;
+            margin-top: -20px;
+            width: 200px;
+            height: 40px;
+            background: url(../../assets/img/serve/z-apply.png) no-repeat;
+            background-size: 100% 100%;
+            float: left;
+            line-height: 45px;
+            text-align: center;
+            font-size: 15px;
+            color: #20AFD5;
+            .z-icon {
+                display: inline-block;
+                width: 32px;
+                height: 32px;
+                margin-right: 5px;
+                vertical-align: middle;
+                margin-top: -2px;
+            }
+            cursor: pointer;
+        }
+        .searchgroup {
+            position: absolute;
+            top: 50%;
+            margin-top: -20px;
+            right: 10px;
+            width: 300px;
+            height: 40px;
+            background: url(../../assets/img/serve/z-searchbg.png) no-repeat;
+            background-size: 100% 100%;
+            float: right;
+            .group {
+                height: 40px;
+                float: left;
+                &.g1 {
+                    width: 90px;
+                    height: 30px;
+                    margin-top: 7px;
+                    margin-left: 20px;
+                    .el-input__inner {
+                        border: none;
+                        font-size: 14px;
+                        height: 30px;
+                    }
+                }
+                &.g2 {
+                    width: 141px;
+                    height: 30px;
+                    margin-top: 8px;
+                    input {
+                        width: 100%;
+                        height: 30px;
+                        box-sizing: border-box;
+                        border: none;
+                        color: #20AFD5;
+                        background: none;
+                        padding: 0 5px;
+                        &::-webkit-input-placeholder {
+                            color: #20AFD5;
+                        }
+                        ;
+                        outline: none;
+                    }
+                }
+                &.g3 {
+                    width: 40px;
+                    color: #20AFD5;
+                    line-height: 47px;
+                    text-align: center;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+    .part_left {
+        width: 330px;
+        height: 100%;
+        float: left;
+        box-sizing: border-box;
+        border-right: 1px solid #20AFD5;
+        .header {
+            height: 120px;
+            .t1 {
+                width: 300px;
+                height: 36px;
+                margin: 15px 15px;
+                .el-input {
+                    font-size: 14px;
+                    .el-input__icon {
+                        font-size: 14px;
+                        color: #20AFD5;
+                        right: 4%;
+                    }
+                    .el-input__inner {
+                        background: none!important;
+                        height: 36px;
+                        color: #20AFD5;
+                        border: 1px solid #20AFD5;
+                        border-radius: 4px;
+                        &::placeholder {
+                            color: #20AFD5;
+                        }
+                    }
+                }
+            }
+            .t2 {
+                width: 300px;
+                height: 36px;
+                margin: 0 15px;
+                border-radius: 4px;
+                color: #20AFD5;
+                box-sizing: border-box;
+                border: 1px solid #20AFD5;
+                text-align: left;
+                text-indent: 4px;
+                .ipt {
+                    height: 100%;
+                    padding: 0;
+                    margin: 0;
+                    border: none;
+                    vertical-align: top;
+                    background: none;
+                    width: 245px;
+                    color: #20AFD5;
+                    outline: none;
+                    border-left: 0;
+                    border-right: 1px solid #20AFD5;
+                    text-indent: 5px;
+                    &::placeholder {
+                        color: #20AFD5;
+                    }
+                }
+                .btn {
+                    font-size: 16px;
+                    width: 40px;
+                    color: #00BBEC;
+                }
+            }
+        }
+        .con {
+            min-width: 320px;
+            overflow: auto;
+            height: calc(100% - 120px);
+            .menu_type {
+                text-align: left;
+            }
+        }
+    }
+    .part_right {
+        width: calc(100% - 330px);
+        height: 100%;
+        font-size: 14px;
+        .tab_head {
+            height: 49px;
+            border-bottom: 1px solid $dcp--border-color;
+            &>div {
+                height: 40px;
+                display: inline-block;
+                padding: 0 10px;
+                line-height: 40px;
+                margin-top: 8px;
+                border: 1px solid $dcp--border-color;
+                border-top-left-radius: 5px;
+                border-top-right-radius: 5px;
+                cursor: pointer;
+                &.active {
+                    height: 41px;
+                    border-bottom: none;
+                    background-color: #0B2542;
+                }
+                .tab_table {
+                    height: calc(100% - 50px);
+                    width: 100%;
+                }
+                .tab_fenye {
+                    height: 50px;
+                    width: 100%;
+                }
+            }
+        }
+        .tab_con {
+            height: calc(100% - 50px);
+            width: 100%;
+            &>div {
+                width: 100%;
+                height: 100%;
+                display: none;
+                &.active {
+                    display: block;
+                }
+                .tab_table {
+                    height: calc(100% - 50px);
+                }
+                .tab_fenye {
+                    height: 50px;
+                    text-align: center;
+                    box-sizing: border-box;
+                    padding-top: 10px;
+                }
+            }
+        }
+        float: left;
+    }
+}
+</style>
+<script>
+// author:zhu
+import {
+    setSessionStore,
+    getUserId
+} from '@/assets/js/mUtils'
+import applyPop from './apply_pop';
+export default {
+    data() {
+            return {
+                // 切换选项卡
+                tab_db: {
+                    'active': true
+                },
+                tab_file: {
+                    'active': false
+                },
+                // 组织方式
+                orgModeList: [],
+                orgMode: 1,
+                searchTypeText: '',
+                // 
+                searchDbType: [{
+                    label: '表名',
+                    id: 0
+                }, {
+                    label: '字段',
+                    id: 1
+                }, {
+                    label: '标签',
+                    id: 2
+                }],
+                searchTypeFile: [{
+                    label: '文件名',
+                    id: 0
+                }],
+                searchDataVal: 0,
+                searchFileVal: 0,
+                searchDbText: '',
+
+                catalogText: '',
+                db: {
+                    pageNum: 1,
+                    pagesize: 20,
+                    pagetotal: 0,
+                    tableList: []
+                },
+                file: {
+                    pageNum: 1,
+                    pagesize: 20,
+                    pagetotal: 0,
+                    tableList: []
+                },
+                curCatalogId: 0, // 当前目录id
+                latelySearch: '', // 记录最近执行搜索的对象
+                dataTree: [],
+                markSending: false, //  是否正在请求添加收藏
+                defaultProps: {
+                    children: 'childList',
+                    label: 'catalogueName'
+                },
+                tableLoading: false,
+            }
+        },
+        computed: {
+            isDb() {
+                return this.tab_db.active;
+            }
+        },
+        methods: {
+            // 切换选项卡
+            clickTab(type) {
+                if (type === 'db') {
+                    this.tab_db.active = true;
+                    this.tab_file.active = false;
+                } else if (type === 'file') {
+                    this.tab_db.active = false;
+                    this.tab_file.active = true;
+                }
+            },
+            markAll(row) {
+                debugger
+                if (this.markSending) {
+                    that.$message({
+                        type: 'warning',
+                        message: '请等待请求返回'
+                    });
+                    return;
+                }
+                this.markSending = true;
+                /* eslint-disable eqeqeq  */
+                row.storeState = row.storeState == 0 ? 2 : 0;
+                var that = this;
+                //  如果字段列表已展开
+                var s = row.storeState == 2 ? 'F' : '';
+                /* eslint-ensable eqeqeq  */
+                if (row.columnList !== '') {
+                    for (var i = 0; i < row.columnList.length; i++) {
+                        row.columnList[i].delState = s;
+                    }
+                }
+                var datas = {
+                    tableId: row.id,
+                    operatorId: getUserId(),
+                    dataSourceOwnerId: row.dataSourceOwner,
+                    storeTableType: row.storeState,
+                }
+
+                $.ajax({
+                    url: that.$store.state.common.ip + '/dataResourcesAuthor/v1.0/storeResourcesAuthorTable',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify(datas),
+                    contentType: 'application/json',
+                    success: function(data) {
+                        if (data.code === 200) {
+                            console.log('收藏成功')
+                        } else {
+                            that.$message({
+                                type: 'warning',
+                                message: '收藏失败！'
+                            });
+                        }
+                    }
+                }).always(function() {
+                    that.markSending = false;
+                });
+            },
+            markSingle(row) {
+                if (this.markSending) {
+                    that.$message({
+                        type: 'warning',
+                        message: '请等待请求返回'
+                    });
+                    return;
+                }
+                this.markSending = true;
+                var that = this;
+                var state;
+                var datas;
+                if (row.delState === 'F') {
+                    state = null;
+                    datas = {
+                        tableId: row.tableId,
+                        operatorId: getUserId(),
+                        dataSourceOwnerId: row.dataSourceOwner,
+                        columnIdMinusList: [row.columnId],
+                        columnIdAddList: [],
+                    }
+                } else {
+                    state = 'F';
+                    datas = {
+                        tableId: row.tableId,
+                        operatorId: getUserId(),
+                        dataSourceOwnerId: row.dataSourceOwner,
+                        columnIdMinusList: [],
+                        columnIdAddList: [row.columnId],
+                    }
+                }
+                $.ajax({
+                    url: that.$store.state.common.ip + '/dataResourcesAuthor/v1.0/storeResourcesAuthor',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify(datas),
+                    contentType: 'application/json',
+                    success: function(data) {
+                        if (data.code === 200) {
+                            row.delState = state;
+                            let box = 0;
+                            for (var i = 0; i < that.db.tableList.length; i++) {
+                                if (that.db.tableList[i].id === row.tableId) {
+                                    for (var k = 0; k < that.db.tableList[i].columnList.length; k++) {
+                                        if (that.db.tableList[i].columnList[k].delState === 'F') {
+                                            box += 1;
+                                        }
+                                    }
+                                    if (box === 0) {
+                                        that.db.tableList[i].storeState = 0;
+                                    } else if (box === that.db.tableList[i].columnList.length) {
+                                        that.db.tableList[i].storeState = 2;
+                                    } else {
+                                        that.db.tableList[i].storeState = 1;
+                                    }
+                                    break;
+                                }
+                            }
+                        } else {
+                            that.$message({
+                                type: 'warning',
+                                message: '收藏失败！'
+                            });
+                        }
+                    }
+                }).always(function() {
+                    that.markSending = false;
+                });
+            },
+            filterNode(value, data) {
+                if (!value) return true;
+                return data.catalogueName.indexOf(value) !== -1;
+            },
+            expandFunc(row, ex) {
+                var that = this;
+                row.columnList = [];
+                if (ex) {
+                    var datas = {
+                        operatorId: getUserId(),
+                        tableId: row.id,
+                        pageNum: 1,
+                        pageSize: 9999
+                    }
+                    $.ajax({
+                        url: that.$store.state.common.ip + '/dataResourcesAuthor/v1.0/getResColumnByTabId',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: JSON.stringify(datas),
+                        contentType: 'application/json',
+                        success: function(data) {
+                            row.columnList = data.data.list;
+                        }
+                    });
+                }
+            },
+            handleCurrentChange(num) {
+                this.db.pageNum = num;
+                this.searchFunc()
+            },
+            //  选择一个主题
+            orgModeSelect(tar = 1) {
+                var that = this;
+                var datas = {
+                    themeTypeId: tar
+                }
+
+                $.ajax({
+                    url: `${this.$store.state.common.ip}/catalogue/v1.0/getCatalogueInfoByParam`,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify(datas),
+                    contentType: 'application/json',
+                    success: function(data) {
+                        that.dataTree = data.data;
+                    }
+                })
+            },
+            searchCatalog() {
+                this.$refs.tree.filter(this.catalogText);
+            },
+            handleNodeClick(data) {
+                this.curCatalogId = data.id;
+                this.latelySearch = 'treeSearch';
+                this.db.pageNum = 1;
+                this.file.pageNum = 1;
+                this.searchFunc();
+            },
+            handleApply() {
+                console.log(this.$refs);
+                this.$refs.applyPop.onOpen();
+            },
+            topSearch(type) {
+                this.latelySearch = 'topSearch';
+                this[type].pageNum = 1;
+                this.searchFunc(type);
+            },
+            searchFunc(type = 'db') {
+                var that = this;
+                if (this.tableLoading) return;
+                this.tableLoading = true;
+                var datasDb = {
+                    pageNum: this.db.pageNum,
+                    pageSize: this.db.pagesize,
+                    operatorId: getUserId(),
+                }
+                var datasFile = {
+                    pageNum: this.file.pageNum,
+                    pageSize: this.file.pagesize,
+                    operatorId: getUserId(),
+                }
+
+                if (this.latelySearch === 'treeSearch') {
+                    datasDb.catalogueId = this.curCatalogId
+                    datasFile.catalogueId = this.curCatalogId
+                } else {
+                    datasDb.selectContent = this.searchDbText
+                    datasFile.selectContent = this.searchDbText
+                }
+
+                $.ajax({
+                    url: `${this.$store.state.common.ip}/dataResourcesAuthor/v1.0/listDataResourcesAuthor`,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify(datasDb),
+                    contentType: 'application/json',
+                    success: function(data) {
+                        if (data.code === 200) {
+                            that.db.tableList = data.data.list;
+                            that.db.pagetotal = data.data.total;
+                        }
+                    },
+                    error: function(error) {
+                        // body...
+                        that.$message.error(error)
+                    }
+                }).always(function() {
+                    that.tableLoading = false;
+                });
+
+                $.ajax({
+                    url: `${this.$store.state.common.ip}/dataResourcesAuthor/v1.0/listFileResourcesAuthor`,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify(datasFile),
+                    contentType: 'application/json',
+                    success: function(data) {
+                        if (data.code === 200) {
+                            that.file.tableList = data.data.list;
+                            that.file.pagetotal = data.data.total;
+                        }
+                    },
+                    error: function(error) {
+                        // body...
+                        that.$message.error(error)
+                    }
+                }).always(function() {
+                    that.tableLoading = false;
+                });
+            }
+        },
+        components: {
+            applyPop,
+        },
+        mounted() {
+            var that = this;
+            //  获取主题方式
+            $.ajax({
+                url: that.$store.state.common.ip + '/theme/v1.0/getThemeList',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    if (data.code === 200) {
+                        that.orgModeList = data.data;
+                        setTimeout(() => that.orgModeSelect(1), 100);
+                    } else {
+                        that.$message({
+                            type: 'warning',
+                            message: data.msg,
+                        });
+                    }
+                }
+            });
+            setSessionStore('defaultActive', '/dcp/serve/apply');
+        }
+}
+</script>

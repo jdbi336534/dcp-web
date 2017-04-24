@@ -1,0 +1,424 @@
+<template>
+    <div class="data-detail">
+        <dcp-dialog ref="data_detail" id="data_detail" @on-close="close" :width="1034" :height="630" :title="title">
+            <template slot="dialog_body">
+                <el-tabs v-model="activeName" @tab-click="handleClick">
+                    <el-tab-pane class="detail-first" label="数据详情" name="first">
+                        <el-row :gutter="4">
+                            <el-col :span="13">
+                                <el-col :span="6">
+                                    <div class="column">业务系统名称</div>
+                                    <div class="column">部署地点</div>
+                                    <div class="column">{{this.dataType === 'db' ? '数据库类型' : '文件传输类型'}}</div>
+                                    <div class="column">{{this.dataType === 'db' ? '历史数据量' : '历史文件量'}}</div>
+                                    <div class="column">协议</div>
+                                    <div class="column">数据源名称</div>
+                                    <div class="column">数据源种类</div>
+                                    <div class="column">所属部门</div>
+                                    <div class="column">数据源简称</div>
+                                    <div class="column">物理地址</div>
+                                    <div class="column">数据库开发商</div>
+                                    <div class="column">数据源类型</div>
+                                    <div class="column">数据源状态</div>
+                                    <div class="column">链接字符串</div>
+                                </el-col>
+                                <el-col :span="18">
+                                    <div class="column">
+                                        {{detailsData.businessSysName || '暂无数据'}}
+                                    </div>
+                                    <div class="column">
+                                        {{detailsData.deploymentAddressName || '暂无数据'}}
+                                    </div>
+                                    <div class="column">
+                                        {{detailsData.dataBaseType || '暂无数据'}}
+                                    </div>
+                                    <div class="column">
+                                        {{detailsData.historyDataSize || '暂无数据'}}
+                                    </div>
+                                    <div class="column">
+                                        {{detailsData.protocol || '暂无数据'}}
+                                    </div>
+                                    <div class="column">
+                                        {{detailsData.dataSourceName || '暂无数据'}}
+                                    </div>
+                                    <div class="column">
+                                        {{detailsData.dataSourceKindName || '暂无数据'}}
+                                    </div>
+                                    <div class="column">
+                                        {{detailsData.vestInOrganiztionName || '暂无数据'}}
+                                    </div>
+                                    <div class="column">
+                                        {{detailsData.dataSourceShortName || '暂无数据'}}
+                                    </div>
+                                    <div class="column">
+                                        {{detailsData.physicalAddress || '暂无数据'}}
+                                    </div>
+                                    <div class="column">
+                                        {{detailsData.dataBastDevelopers || '暂无数据'}}
+                                    </div>
+                                    <div class="column">
+                                        {{detailsData.dataSourceTypeName || '暂无数据'}}
+                                    </div>
+                                    <div class="column">
+                                        {{detailsData.dataSourceStatusName || '暂无数据'}}
+                                    </div>
+                                    <div class="column">
+                                        {{detailsData.linkString || '暂无数据'}}
+                                    </div>
+                                </el-col>
+                            </el-col>
+                            <el-col :span="11">
+                                <el-col :span="6">
+                                    <div class="column_r">数据拥有者</div>
+                                    <div class="column_r">IP地址</div>
+                                    <div class="column_r">端口</div>
+                                    <div class="column_r">版本</div>
+                                    <div class="column_r">用户名</div>
+                                    <div class="column">设备型号</div>
+                                    <div class="column">硬件配置</div>
+                                    <div class="column">操作系统</div>
+                                    <div class="column">操作系统位数</div>
+                                    <div class="column">创建时间</div>
+                                    <div class="column">创建人</div>
+                                    <div class="column">数据审批状态</div>
+                                    <div class="column">数据保存周期</div>
+                                    <div class="column">{{this.dataType === 'db' ? '数据增长率' : '文件增长率'}}</div>
+                                </el-col>
+                                <el-col :span="18">
+                                    <div class="column_r">
+                                        {{detailsData.dataSourceOwnerName || '暂无数据'}}
+                                    </div>
+                                    <div class="column_r">
+                                        {{detailsData.ipAddress || '暂无数据'}}
+                                    </div>
+                                    <div class="column_r">
+                                        {{detailsData.port || '暂无数据'}}
+                                    </div>
+                                    <div class="column_r">
+                                        {{detailsData.dataBaseVersion || '暂无数据'}}
+                                    </div>
+                                    <div class="column_r">
+                                        {{detailsData.username || '暂无数据'}}
+                                    </div>
+                                    <div class="column_r">
+                                        {{detailsData.equipmentModel || '暂无数据'}}
+                                    </div>
+                                    <div class="column_r">
+                                        {{detailsData.hardwareConfiguration || '暂无数据'}}
+                                    </div>
+                                    <div class="column_r">
+                                        {{detailsData.os || '暂无数据'}}
+                                    </div>
+                                    <div class="column_r">
+                                        {{detailsData.osBit || '暂无数据'}}
+                                    </div>
+                                    <div class="column_r">
+                                        {{detailsData.createTime || '暂无数据'}}
+                                    </div>
+                                    <div class="column_r">
+                                        {{detailsData.creatorName || '暂无数据'}}
+                                    </div>
+                                    <div class="column_r">
+                                        {{detailsData.aproveStatusName || '暂无数据'}}
+                                    </div>
+                                    <div class="column_r">
+                                        {{detailsData.dataSourceRetentionCycle || '暂无数据'}}
+                                    </div>
+                                    <div class="column_r">
+                                        {{detailsData.dataSourceGrowthRate || '暂无数据'}}
+                                    </div>
+                                </el-col>
+                            </el-col>
+                        </el-row>
+                    </el-tab-pane>
+                    <el-tab-pane label="树状结构" name="second">
+                        <div class="detail-tree" v-if="dataType === 'db'">
+                            <div class="data-detail-tree-left">
+                                <el-tree class="data-detail-tree-tree" :data="treeData" :highlight-current="true" ref="detailTree" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+                            </div>
+                            <div class="data-detail-tree-right">
+                                <el-table ref="treeTable" :data="tableData" :resizable="true" border empty-text=" " style="width: 100%; height: 100%;" v-loading="tableloading" element-loading-text="拼命加载中" row-key="id">
+                                    <el-table-column prop="columnName" label="字段名称" show-overflow-tooltip>
+                                    </el-table-column>
+                                    <el-table-column prop="dataType" label="字段类型" show-overflow-tooltip>
+                                    </el-table-column>
+                                    <el-table-column prop="dataLength" label="字段长度" show-overflow-tooltip>
+                                    </el-table-column>
+                                    <el-table-column prop="dataPrecision" label="字段精度" show-overflow-tooltip>
+                                        <template scope="scope">
+                                            {{!scope.row.precision ? scope.row.precision : ' '}}
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column prop="dataNotNull" label="是否非空" show-overflow-tooltip>
+                                        <template scope="scope">
+                                            {{!scope.row.notNull ? '否' : '是'}}
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column prop="dataConstraintType" label="键类型" show-overflow-tooltip>
+                                    </el-table-column>
+                                </el-table>
+                            </div>
+                        </div>
+                        <div class="detail-tree" v-if="dataType === 'file'">
+                            <el-table ref="treeTable" :data="tableData" :resizable="true" border empty-text=" " style="width: 100%; height: 100%;" v-loading="tableloading" element-loading-text="拼命加载中" row-key="id">
+                                <el-table-column label="名称" prop="fileName" show-overflow-tooltip>
+                                </el-table-column>
+                                <el-table-column label="类型" prop="fileTypeName" show-overflow-tooltip>
+                                </el-table-column>
+                                <el-table-column label="修改日期" prop="modifyTime" show-overflow-tooltip>
+                                    <template scope="scope">
+                                        {{formatTime(scope.row.modifyTime)}}
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="大小" prop="fileSize" show-overflow-tooltip>
+                                </el-table-column>
+                                <el-table-column label="路径" prop="path" show-overflow-tooltip>
+                                </el-table-column>
+                            </el-table>
+                        </div>
+                    </el-tab-pane>
+                </el-tabs>
+            </template>
+            <template slot="dialog_footer">
+                <el-button type="text" @click="close">关闭</el-button>
+            </template>
+        </dcp-dialog>
+    </div>
+</template>
+<script>
+import DcpDialog from '@/components/common/DCPDialog'
+import {
+    getDataSourceInfo,
+    listDBInfoOrFile
+} from '../../assets/js/queryData';
+import {
+    formatTime
+} from '../../assets/js/mUtils';
+export default {
+    data() {
+            return {
+                title: '',
+                activeName: 'first',
+                detailsData: {
+                    businessSysName: '暂无数据',
+                    deploymentAddressName: '暂无数据',
+                    dataBaseType: '暂无数据',
+                    historyDataSize: '暂无数据',
+                    protocol: '暂无数据',
+                    dataSourceName: '暂无数据',
+                    dataSourceKindName: '暂无数据',
+                    vestInOrganiztionName: '暂无数据',
+                    dataSourceShortName: '暂无数据',
+                    physicalAddress: '暂无数据',
+                    dataBastDevelopers: '暂无数据',
+                    dataSourceTypeName: '暂无数据',
+                    dataSourceStatusName: '暂无数据',
+                    linkString: '暂无数据',
+                    dataSourceOwnerName: '暂无数据',
+                    ipAddress: '暂无数据',
+                    port: '暂无数据',
+                    dataBaseVersion: '暂无数据',
+                    username: '暂无数据',
+                    equipmentModel: '暂无数据',
+                    hardwareConfiguration: '暂无数据',
+                    os: '暂无数据',
+                    osBit: '暂无数据',
+                    createTime: '暂无数据',
+                    creatorName: '暂无数据',
+                    aproveStatusName: '暂无数据',
+                    dataSourceRetentionCycle: '暂无数据',
+                    dataSourceGrowthRate: '暂无数据',
+                },
+                defaultProps: {
+                    children: 'children',
+                    label: 'label'
+                },
+                treeData: [],
+                tableData: [],
+                tableloading: false,
+                condition: null,
+                dataType: 'db'
+            }
+        },
+        props: {},
+        components: {
+            DcpDialog
+        },
+        mounted() {},
+        methods: {
+            formatTime(t) {
+                return formatTime(t);
+            },
+            handleNodeClick(data, node, self) {
+                let {
+                    columns
+                } = data;
+                this.tableData = columns;
+            },
+            open(data) {
+                this.condition = data;
+                this.dataType = data.dataSourceKind;
+                getDataSourceInfo(data).then(res => {
+                    let {
+                        code,
+                        data,
+                        msg
+                    } = res;
+                    if (code === 200) {
+                        this.detailsData = data;
+                    } else {
+                        this.$message.error(msg);
+                    }
+                });
+                this.$refs.data_detail.open()
+            },
+            close() {
+                this.title = '';
+                this.activeName = 'first';
+                this.detailsData = {
+                    businessSysName: '暂无数据',
+                    deploymentAddressName: '暂无数据',
+                    dataBaseType: '暂无数据',
+                    historyDataSize: '暂无数据',
+                    protocol: '暂无数据',
+                    dataSourceName: '暂无数据',
+                    dataSourceKindName: '暂无数据',
+                    vestInOrganiztionName: '暂无数据',
+                    dataSourceShortName: '暂无数据',
+                    physicalAddress: '暂无数据',
+                    dataBastDevelopers: '暂无数据',
+                    dataSourceTypeName: '暂无数据',
+                    dataSourceStatusName: '暂无数据',
+                    linkString: '暂无数据',
+                    dataSourceOwnerName: '暂无数据',
+                    ipAddress: '暂无数据',
+                    port: '暂无数据',
+                    dataBaseVersion: '暂无数据',
+                    username: '暂无数据',
+                    equipmentModel: '暂无数据',
+                    hardwareConfiguration: '暂无数据',
+                    os: '暂无数据',
+                    osBit: '暂无数据',
+                    createTime: '暂无数据',
+                    creatorName: '暂无数据',
+                    aproveStatusName: '暂无数据',
+                    dataSourceRetentionCycle: '暂无数据',
+                    dataSourceGrowthRate: '暂无数据',
+                };
+                this.defaultProps = {
+                    children: 'children',
+                    label: 'label'
+                };
+                this.treeData = [];
+                this.tableData = [];
+                this.tableloading = false;
+                this.condition = null;
+                this.dataType = 'db';
+                this.$refs.data_detail.close();
+            },
+            handleClick() {
+                if (this.activeName === 'second') {
+                    listDBInfoOrFile(this.condition).then(res => {
+                        let {
+                            code,
+                            data,
+                            msg
+                        } = res;
+                        if (code === 200) {
+                            if (this.dataType === 'db') {
+                                let {
+                                    tables,
+                                    schemaName
+                                } = data[0];
+                                for (let item of tables) {
+                                    item.label = item.tableName;
+                                }
+                                this.treeData = [{
+                                    label: schemaName,
+                                    children: tables,
+                                    columns: []
+                                }];
+                            } else if (this.dataType === 'file') {
+                                this.tableData = data;
+                            }
+                        } else {
+                            this.$message.error(msg);
+                        }
+                    });
+                }
+            }
+        }
+}
+</script>
+<style lang="scss">
+.data-detail {
+    .el-tabs {
+        height: 100%;
+        .el-tabs__content {
+            height: calc(100% - 65px);
+        }
+        .detail-first {
+            margin-left: 20px;
+        }
+        .el-tab-pane {
+            height: 100%;
+            position: relative;
+            .detail-tree {
+                height: 100%;
+                .data-detail-tree-left {
+                    height: 100%;
+                    float: left;
+                    width: 20%;
+                    overflow: auto;
+                    .el-tree-node > .el-tree-node__children {
+                        overflow: visible;
+                    }
+                }
+                .data-detail-tree-right {
+                    height: 100%;
+                    float: left;
+                    width: calc(100% - 20% - 2px);
+                    .el-table th.is-leaf {
+                        text-align: left;
+                    }
+                    .el-table__body-wrapper {
+                        height: calc(100% - 40px);
+                    }
+                }
+            }
+        }
+    }
+    .el-tabs__header {
+        border: 0;
+        width: 100%;
+        .el-tabs__nav {
+            width: 100%;
+            .el-tabs__item {
+                padding: 0 16px;
+                height: 50px;
+                box-sizing: border-box;
+                line-height: 42px;
+                display: inline-block;
+                list-style: none;
+                color: #01ABDA;
+                position: relative;
+                text-align: center;
+                font-size: 20px;
+                width: 50%;
+            }
+        }
+    }
+    .column {
+        font-size: 16px;
+        color: #18d3fd;
+        margin-top: 10px;
+        text-align: left;
+    }
+    .column_r {
+        font-size: 16px;
+        color: #18d3fd;
+        margin-top: 10px;
+        text-align: left;
+    }
+}
+</style>

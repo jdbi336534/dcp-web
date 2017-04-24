@@ -1,0 +1,140 @@
+.datasource-accessapplication {
+    height: 100%;
+    .datasource-list {
+        height: 100%;
+    }
+    .hand {
+        cursor: pointer;
+    }
+    .hide {
+        display: none;
+    }
+    .accessapplication-model {
+        .delect,
+        .testLink {
+            font-size: 14px;
+            font-family: "微软雅黑";
+            color: rgba(0, 187, 236, 0.9);
+            p {
+                width: 340px;
+                height: 100px;
+                text-align: center;
+                font-size: 18px;
+                line-height: 60px;
+                text-indent: 2em;
+                margin-top: -30px;
+                font-family: "微软雅黑";
+            }
+            ul {
+                width: 280px;
+                height: 60px;
+                color: #fff;
+                margin-left: -10px;
+                padding: 0 50px 0 70px;
+                li {
+                    float: left;
+                    color: #fff;
+                    width: 60px;
+                    height: 25px;
+                    margin: 0 35px;
+                    background: #0C1A34;
+                    border-radius: 0px;
+                    line-height: 24px;
+                    text-align: center;
+                    border: 1px solid #0C1A34;
+                    .el-loading-mask {
+                        background-color: rgba(13, 44, 77, 1)!important;
+                    }
+                    .el-loading-spinner .circular {
+                        width: 20px;
+                    }
+                }
+                li:hover {
+                    border: 1px solid #05bde6;
+                    color: #fff;
+                    box-shadow: inset 0 0 10px 0 rgba(98, 208, 248, 0.42);
+                }
+                /*li:nth-child(2) {
+                background-color: #05bde6;
+            }*/
+            }
+        }
+        .LinkOk {
+            p {
+                font-size: 18px;
+                height: 150px;
+                color: rgba(0, 187, 236, 0.9);
+                word-break: break-all;
+                width: 400px;
+                overflow: auto;
+                margin: -10px;
+                line-height: 100px;
+                text-align: center;
+            }
+            .morep {
+                line-height: 20px;
+            }
+            // ul {
+            //     li {
+            //         margin-left: 100px;
+            //     }
+            // }
+        }
+        .submitbox,
+        .delectbox,
+        .testLinkbox,
+        .linkokbox {
+            .el-dialog {
+                width: 400px;
+                height: 200px;
+                background: url(../../assets/img/modal/border.png);
+                background-size: 100% 100%;
+                padding: 10px;
+                margin-bottom: 0;
+                background-color: rgb(12, 38, 66)!important;
+                position: absolute;
+                margin-top: 10%;
+            }
+        }
+        .submit {
+            font-size: 24px;
+            color: #0396c2;
+            .fTitle {
+                width: 400px;
+                height: 50px;
+                text-align: center;
+                font-size: 16px;
+            }
+            ul {
+                width: 400px;
+                height: 50px;
+                font-size: 14px;
+                color: #fff;
+                li {
+                    float: left;
+                    color: #fff;
+                    width: 60px;
+                    height: 25px;
+                    margin-left: 85px;
+                    background: #0C1A34;
+                    border-radius: 0px;
+                    /*border-color: #0C1A34;*/
+                    line-height: 24px;
+                    text-align: center;
+                    border: 1px solid #0C1A34;
+                    .el-loading-mask {
+                        background-color: rgba(13, 44, 77, 1)!important;
+                    }
+                    .el-loading-spinner .circular {
+                        width: 20px;
+                    }
+                }
+                li:hover {
+                    border: 1px solid #05bde6;
+                    color: #fff;
+                    box-shadow: inset 0 0 10px 0 rgba(98, 208, 248, 0.42);
+                }
+            }
+        }
+    }
+}

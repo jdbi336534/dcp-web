@@ -1,0 +1,377 @@
+<template>
+    <div class="resource-apply-check">
+        <div class="left">
+            <div class="header">
+                业务表名称
+            </div>
+            <ul id="scm">
+                <li v-for="(item, k) in alltable" @click="handleCol(k, item.id)">{{item.businessTableName}}</li>
+            </ul>
+        </div>
+        <div class="middle">
+            <div class="tbl">
+                <el-table :data="tableData" border empty-text=" " style="width: 100%; height: 100%;" :resizable="true" v-loading="tableloading" element-loading-text="拼命加载中">
+                    <el-table-column label="字段名称" prop="columnName" show-overflow-tooltip>
+                    </el-table-column>
+                    <el-table-column label="业务字段名称" prop="businessColumnName" show-overflow-tooltip>
+                    </el-table-column>
+                    <el-table-column label="是否关键字段" show-overflow-tooltip>
+                        <template scope="scope">
+                            {{ scope.row.isKeyColumn ? '是' : (scope.row.isKeyColumn === 0 ? '否' : '') }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="业务计算规则" prop="businessComputationRule" show-overflow-tooltip>
+                    </el-table-column>
+                    <el-table-column label="IT计算规则" prop="itComputationRule" show-overflow-tooltip>
+                    </el-table-column>
+                    <el-table-column label="路径" prop="path" show-overflow-tooltip>
+                    </el-table-column>
+                    <el-table-column label="经办人" prop="realName" show-overflow-tooltip>
+                    </el-table-column>
+                    <el-table-column label="标签" show-overflow-tooltip>
+                        <template scope="scope">
+                            <el-tooltip placement="top" v-for="(item, k) in scope.row.tagList" :key="item.id">
+                                <div slot="content" style="max-width:100px">{{ item.tagDescription }}</div>
+                                <span class="sontag">
+                                    <el-tag type="success" close-transition>{{ item.tagName }}</el-tag>
+                                </span>
+                            </el-tooltip>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+        </div>
+        <div class="right">
+            <div class="top">表信息</div>
+            <div class="middle-dl">
+                <dl>
+                    <dt>
+                        <div class="lf">表名</div>
+                        <el-input v-model="form.tableName" readonly></el-input>
+                    </dt>
+                    <dt>
+                        <div class="lf">中文名称</div>
+                        <el-input v-model="form.cnName" readonly></el-input>
+                    </dt>
+                    <dt>
+                        <div class="lf">英文名称</div>
+                        <el-input v-model="form.enName" readonly></el-input>
+                    </dt>
+                    <dt>
+                        <div class="lf">短名</div>
+                        <el-input v-model="form.shortName" readonly></el-input>
+                    </dt>
+                    <dt>
+                        <div class="lf">业务表名称</div>
+                        <el-input v-model="form.businessTableName" readonly></el-input>
+                    </dt>
+                    <dt>
+                        <div class="lf">是否关键表</div>
+                        <el-input :value="form.isKeyTable === 1 ? '是' : (form.isKeyTable === 0 ? '否' : '')" readonly></el-input>
+                    </dt>
+                    <dt>
+                        <div class="lf">表路径</div>
+                        <el-input v-model="form.path" readonly></el-input>
+                    </dt>
+                    <dt>
+                        <div class="lf">经办人</div>
+                        <el-input v-model="form.realName" readonly></el-input>
+                    </dt>
+                </dl>
+                <div class="tagbox">
+                    <el-tooltip placement="top" v-for="(item,k) in form.tagList" :key="item.id">
+                        <div slot="content" style="max-width: 100px">{{ item.tagDescription }}</div>
+                        <el-tag type="success" close-transition>{{ item.tagName }}</el-tag>
+                    </el-tooltip>
+                </div>
+            </div>
+            <div class="footer-textarea">
+                <textarea id="msg" class="msg" v-if="!isShow" v-model="textarea_msg" placeholder="请填写审核意见"></textarea>
+            </div>
+            <div class="footer-btn">
+                <el-button class="databtn leftbtn" @click="goBackFunc">返回</el-button>
+                <el-button v-show="!isShow" :loading="loading" class="databtn middlebtn" @click="handleCheckResult('refused')">驳回</el-button>
+                <el-button v-show="!isShow" :loading="loading" class="databtn rightbtn" @click="handleCheckResult('passed')">通过</el-button>
+            </div>
+        </div>
+    </div>
+</template>
+<style lang="scss">
+.resource-apply-check {
+    width: 100%;
+    height: 100%;
+    font-size: 14px;
+    position: relative;
+    background: #0d152f;
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    .left {
+        width: 15%;
+        height: 100%;
+        background: #0d152f;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        border-right: 1px solid #176A8A;
+        float: left;
+        .header {
+            height: 65px;
+            line-height: 65px;
+            text-align: center;
+            color: #24CAF3;
+            background-color: #0C2642;
+            font-size: 16px;
+        }
+        ul {
+            overflow-y: auto;
+            height: calc(100% - 65px);
+            li {
+                text-align: center;
+                cursor: pointer;
+                font-size: 16px;
+                color: #24CAF3;
+                height: 60px;
+                line-height: 60px;
+                &.on {
+                    background-image: linear-gradient(0deg, rgba(83, 221, 255, 0.21) 2%, rgba(83, 221, 255, 0.10) 53%, rgba(83, 221, 255, 0.22) 97%);
+                }
+            }
+        }
+    }
+    .middle {
+        height: 100%;
+        width: 65%;
+        float: left;
+        &.on {
+            display: block;
+        }
+        .tbl {
+            height: calc(100% - 50px);
+            .el-table__body-wrapper {
+                height: 100%;
+            }
+        }
+    }
+    .right {
+        float: left;
+        height: 100%;
+        width: calc(100% - 15% - 65% - 2px);
+        border-left: 1px solid #124562;
+        position: relative;
+        min-width: 200px;
+        .top {
+            height: 65px;
+            line-height: 65px;
+            text-align: center;
+            background-color: #0A3553;
+            font-size: 16px;
+            color: #24CAF3;
+        }
+        .middle-dl {
+            width: 100%;
+            height: 60%;
+            float: right;
+            font-size: 14px;
+            color: #01ABDA;
+            box-sizing: border-box;
+            margin-top: 10px;
+            overflow-y: auto;
+            position: relative;
+            dt {
+                height: 40px;
+                line-height: 40px;
+                .lf {
+                    float: left;
+                    margin-right: 10px;
+                    text-align: right;
+                    width: 30%;
+                    min-width: 70px;
+                }
+            }
+            .el-input {
+                display: block;
+                width: 50%;
+                min-width: 100px;
+                float: left;
+                input {
+                    background: none;
+                    height: 40px;
+                    box-sizing: border-box;
+                    border: none;
+                    border-bottom: 1px solid #144C69;
+                    border-radius: 0;
+                    color: #fff;
+                    font-size: 14px;
+                }
+            }
+            .tagbox {
+                margin: 10px 20px 20px;
+                height: 25%;
+                span {
+                    padding: 0 3px;
+                    margin: 2px;
+                }
+            }
+        }
+        .footer-textarea {
+            float: left;
+            height: 20%;
+            width: 100%;
+            .msg {
+                resize: none;
+                width: 98%;
+                height: 100%;
+                background: #0D152F;
+                border: 1px solid #176A8A;
+                color: #18C5EE;
+            }
+        }
+        .footer-btn {
+            float: left;
+            height: calc(100% - 65px - 60% - 10px - 20%);
+            width: 100%;
+            position: relative;
+            .databtn {
+                color: #24CAF3;
+                background: #01172F;
+                border: 1px solid rgba(7, 113, 147, 0.98);
+                box-shadow: inset 0 0 10px 0 rgba(98, 208, 248, 0.42);
+                border-radius: 1px;
+                width: 70px;
+                height: 35px;
+                margin-top: 8%;
+                margin-right: 10px;
+                float: right;
+                line-height: 10px;
+                &:hover {
+                    border-color: #05bde6;
+                    box-shadow: inset 0 0 10px 0 rgba(98, 208, 248, 0.42);
+                }
+                &.leftbtn {
+                    float: left;
+                    margin-left: 10px;
+                }
+                &.middlebtn {
+                    float: left;
+                    margin-left: 25px;
+                }
+                &.middlebtn1 {
+                    float: left;
+                    margin-left: 114px;
+                }
+                &.rightbtn {
+                    float: right;
+                    margin-right: 10px;
+                }
+            }
+        }
+    }
+}
+</style>
+<script>
+import {
+    getUserId,
+    setSessionStore
+} from '@/assets/js/mUtils'
+import {
+    findApproveTableList,
+    findApproveColumnList,
+    approveResources
+} from '@/assets/js/queryData'
+export default {
+    data() {
+            return {
+                alltable: [],
+                selectbox: [],
+                isShow: false,
+                tableData: [],
+                form: {},
+                loading: false,
+                tableloading: true,
+                userId: null,
+                textarea_msg: '',
+            }
+        },
+        created() {
+            this.userId = getUserId() || 53;
+        },
+        methods: {
+            handleCol(k, tableId) {
+                this.form = this.alltable[k];
+                var batchId = this.$route.params.batchId;
+                findApproveColumnList(batchId, tableId).then(res => {
+                    let {
+                        code,
+                        data,
+                        msg
+                    } = res;
+                    if (code === 200) {
+                        this.tableData = data;
+                        $('#scm').children().eq(k).addClass('on').siblings().removeClass('on');
+                        this.tableloading = false;
+                    } else {
+                        this.$message.error(msg);
+                    }
+                })
+            },
+            handleCheckResult(result) {
+                var batchId = this.$route.params.batchId;
+                var taskId = this.$route.params.taskId;
+                var msg = this.textarea_msg || '无';
+                this.loading = true;
+                approveResources(this.userId, 'db', batchId, taskId, result, msg).then(res => {
+                    let {
+                        code,
+                        msg
+                    } = res;
+                    if (code === 200) {
+                        this.$message({
+                            message: msg,
+                            type: 'success'
+                        });
+                    } else {
+                        this.$message.error(msg);
+                    }
+                    this.loading = false;
+                    this.goBackFunc();
+                });
+            },
+            goBackFunc() {
+                let path = '/dcp/resource/review';
+                if (this.isShow) {
+                    path = '/dcp/resource/audited';
+                }
+                this.$router.push({
+                    path
+                });
+            },
+            getData(k) {
+                var batchId = this.$route.params.batchId;
+                findApproveTableList(batchId).then(res => {
+                    let {
+                        code,
+                        data,
+                        msg
+                    } = res;
+                    if (code === 200) {
+                        this.alltable = data.list;
+                        this.form = this.alltable[k];
+                        if (k === 0 || !!k) {
+                            setTimeout(this.handleCol, 100, k, this.alltable[k].id)
+                        };
+                    } else {
+                        this.$message.error(msg);
+                    }
+                })
+            },
+
+        },
+        mounted() {
+            var isShow = parseInt(this.$route.params.isShow, 10);
+            this.isShow = !isShow;
+            this.getData(0);
+            setSessionStore('defaultActive', '/dcp/resource/review');
+        },
+}
+</script>

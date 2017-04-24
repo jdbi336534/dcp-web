@@ -1,0 +1,78 @@
+
+.jdbBox{
+    margin: 0;
+    width: 10.4rem;
+    height: 2.3rem;
+    margin-left: 0.2rem;
+  .el-row {
+    margin-top: 0.06rem;
+
+  }
+  .el-row:last-child {
+      margin-bottom: 0;
+    }
+
+  .grid-content {
+    border-radius: 4px;
+    min-height: 0.36rem;
+  }
+  .row-bg {
+
+    background-color: #f9fafc;
+  }
+
+.el-form-item__content{
+    height: 0.26rem!important;
+    line-height: 0.26rem!important;
+}
+.el-form-item{
+  margin-bottom: 0.05rem!important;
+}
+.el-input__inner,.el-select-dropdown,
+.el-button--primary,.el-textarea__inner,
+.el-select-dropdown.is-multiple .el-select-dropdown__item.selected.hover,
+.el-select-dropdown__item.hover,
+.el-input.is-disabled .el-input__inner,
+.el-textarea.is-disabled .el-textarea__inner{
+border: 0;
+border-bottom: 1px solid  #1C8EB2!important;
+border-radius: 1px;
+background-color: #0d152f!important;
+
+}
+.el-textarea.is-disabled .el-textarea__inner{
+  color: #39BEF3;
+}
+
+.el-input__inner{
+    height: 0.26rem!important;
+}
+.el-input.is-disabled .el-input__inner{
+  color:#39BEF3;
+}
+.el-select .el-input .el-input__icon{
+  color:#20AFD5;
+}
+.el-form-item__label{
+ color: rgba(36,202,243,0.9);
+ font-size: 14px;
+}
+.el-table__empty-text{
+  color: #39BEF3;
+}
+.inputcolor{
+    color:rgba(57,190,243,1)!important;
+}
+.el-scrollbar__thumb{
+    background-color: rgba(1,171,218,1)
+}
+.el-select{
+    width: 3.80rem!important;
+}
+@media only screen and (max-width: 1280px) {
+    .el-row {
+    margin-top: 0.05rem!important;
+  }
+}
+
+}

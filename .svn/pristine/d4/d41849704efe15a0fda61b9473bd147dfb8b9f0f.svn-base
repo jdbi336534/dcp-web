@@ -1,0 +1,205 @@
+.data-box {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    ul li {
+        list-style: none
+    }
+    .jz {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+    //表格样式
+    .datasource-list {
+        height: calc(100% - 50px);
+        .el-table__body {
+            text-align: left;
+        }
+        .el-button {
+            margin: 0 5px 0 0;
+            img {
+                width: 30px;
+                height: 30px;
+            }
+        }
+        .el-table th.is-leaf {
+            text-align: left;
+        }
+    }
+    /*详情中的树结构样式*/
+    .treetop__wrap {
+        float: left;
+        position: relative;
+        left: -760px;
+        top: 10px;
+        width: 200px;
+        height: 440px;
+        .title {
+            height: 50px;
+            background-color: #00172F;
+            margin-top: 1px;
+            text-align: center;
+            line-height: 40px;
+            color: #05bde6;
+            font-weight: bolder;
+        }
+        .treestructer__wrap {
+            // width: 100%;
+            margin-bottom: 0!important;
+            height: 425px;
+            .treestructer {
+                width: 200px;
+                .el-tree {
+                    background-color: rgba(12, 37, 66, 0);
+                    border: 0;
+                    margin-left: 0px;
+                }
+                .el-tree-node__content:hover {
+                    background: rgba(228, 232, 241, 0);
+                    color: #9edae7;
+                }
+            }
+            .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
+                background-color: rgba(98, 208, 248, 0.3);
+            }
+        }
+        .el-tree-node > .el-tree-node__children {
+            // overflow: hidden;
+            overflow: initial;
+            background-color: transparent;
+            //padding-right: 25px;
+            // width: 300px;
+            margin-left: -20px;
+            text-align: left;
+        }
+        .el-scrollbar__thumb {
+            background-color: rgba(36, 202, 243, 0.8);
+        }
+    }
+    /*详情中的table样式*/
+    .tablestructer {
+        float: left;
+        position: relative;
+        left: 190px;
+        top: -430px;
+        width: 774px;
+        margin-left: 10px;
+    }
+    //分页样式
+    .block {
+        margin: 0;
+        height: 50px;
+        text-align: center;
+    }
+    .hand {
+        cursor: pointer;
+    }
+    .hide {
+        display: none;
+    }
+    .detalmodal {
+        //详情弹窗样式
+        font-family: "微软雅黑";
+        .column {
+            font-size: 18px;
+            color: #18d3fd;
+            margin-bottom: 44px;
+        }
+        .column_r {
+            font-size: 18px;
+            color: #18d3fd;
+            margin-bottom: 30px;
+        }
+        .el-dialog {
+            width: 1034px;
+            height: 630px;
+            background: url("../../assets/img/data/modal/detailmodal.png");
+            background-size: 100% 100%;
+            padding: 10px;
+        }
+        .el-dialog__header {
+            font-size: 16px;
+            padding: 0;
+        }
+        .el-dialog__close {
+            color: #06bfe7;
+            text-shadow: 0 0 0.2em #06bfe7, ;
+        }
+        .el-dialog__headerbtn {
+            padding-right: 11px;
+            padding-top: 6px;
+        }
+        .el-dialog__body {
+            padding-top: 170px;
+            padding-left: 100px;
+        }
+    }
+    .data-details {
+        .data_details .column {
+            height: 30px;
+            margin-top: 0;
+            font-size: 14px;
+            line-height: 30px;
+            border-bottom: 1px dashed rgba(28, 142, 178, 0.18);
+        }
+        .el-col-6 {
+            padding-right: 0 !important;
+        }
+        .el-col-18 {
+            padding-left: 0 !important;
+        }
+        .column_r {
+            //padding-left: 0!important;
+            border-bottom: 1px dashed rgba(28, 142, 178, 0.18);
+            height: 30px;
+            margin-top: 0;
+            font-size: 14px;
+            line-height: 30px;
+            border-bottom: 1px dashed rgba(28, 142, 178, 0.18);
+        }
+        .el-col-13,
+        .el-col-11 {
+            width: 46%!important;
+            overflow: hidden;
+            margin-top: -40px;
+        }
+        .el-col-11 {
+            margin-left: 4%;
+        }
+    }
+    .aduit-detail {
+        .data_details .column {
+            height: 30px;
+            margin-top: 0;
+            font-size: 14px;
+            line-height: 30px;
+            border-bottom: 1px dashed rgba(28, 142, 178, 0.18);
+        }
+        .el-col-6 {
+            padding-right: 0 !important;
+        }
+        .el-col-18 {
+            padding-left: 0 !important;
+        }
+        .column_r {
+            //padding-left: 0!important;
+            border-bottom: 1px dashed rgba(28, 142, 178, 0.18);
+            height: 30px;
+            margin-top: 0;
+            font-size: 14px;
+            line-height: 30px;
+            border-bottom: 1px dashed rgba(28, 142, 178, 0.18);
+        }
+        .el-col-13,
+        .el-col-11 {
+            width: 46%!important;
+            overflow: hidden;
+        }
+        .el-col-11 {
+            margin-left: 4%;
+        }
+    }
+}

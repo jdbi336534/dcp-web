@@ -1,0 +1,292 @@
+<template>
+    <div class="applyedit">
+        <div class="left">
+            <div class="header">
+                schema列表
+            </div>
+            <ul id="scm">
+                <li v-for="(item,k) in schemalist" :data-index="k" @click="getTableList(item.schemaName,item.dataSourceId,k)">{{item.schemaName}}</li>
+            </ul>
+        </div>
+        <div class="right">
+            <div class="table">
+                <el-table :data="tableList" :resizable="true" border empty-text="暂无数据" height="100%" style="width: 100%;height:100%;" v-loading="tableloading" element-loading-text="拼命加载中">
+                    <el-table-column label="表名" show-overflow-tooltip>
+                        <template scope="scope">
+                            {{scope.row.tableName}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="中文名称" show-overflow-tooltip>
+                        <template scope="scope">
+                            {{scope.row.cnName}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="英文名称" show-overflow-tooltip>
+                        <template scope="scope">
+                            {{scope.row.enName}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="短名" show-overflow-tooltip>
+                        <template scope="scope">
+                            {{scope.row.shortName}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="业务表名称" show-overflow-tooltip>
+                        <template scope="scope">
+                            {{scope.row.businessTableName}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="是否关键表" show-overflow-tooltip>
+                        <template scope="scope">
+                            {{scope.row.isKeyTable?'是':(scope.row.isKeyTable==0?'否':'')}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="表路径" show-overflow-tooltip width="250">
+                        <template scope="scope">
+                            {{scope.row.path}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="经办人" show-overflow-tooltip>
+                        <template scope="scope">
+                            {{scope.row.realName}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="标签">
+                        <template scope="scope">
+                            <el-tag :type="gettype(k)" v-for="(item,k) in scope.row.tagList" :key="k">{{item.tagName}}</el-tag>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="修改状态" show-overflow-tooltip>
+                        <template scope="scope">
+                            {{scope.row.modifyStatue==1?'可修改':'不可修改'}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作" show-overflow-tooltip>
+                        <template scope="scope">
+                            <el-button type="text" @click="editTable(scope.row)"><img src="../../assets/img/btn-edit.png" title="修改"></el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+            <!-- fenye -->
+            <div class="fengye">
+                <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pagesize" layout="total,  prev, pager, next, jumper" :total="pagetotal">
+                </el-pagination>
+                <el-button type="primary" class="btn" @click="goBack">返回</el-button>
+            </div>
+            <!--  -->
+        </div>
+    </div>
+</template>
+<style lang="scss">
+.applyedit {
+    width: 100%;
+    height: 100%;
+    font-size: 14px;
+    position: relative;
+    background: #0d152f;
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    .left {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 200px;
+        height: 100%;
+        background: rgb(13, 21, 47);
+        box-sizing: border-box;
+        border-right: 1px solid #176A8A;
+        overflow-y: auto;
+        .header {
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            color: #24CAF3;
+            background-color: #0C2642;
+            font-size: 0.16rem;
+        }
+        ul {
+            li {
+                text-align: center;
+                cursor: pointer;
+                font-size: 16px;
+                color: #24CAF3;
+                height: 50px;
+                line-height: 50px;
+                &.on,
+                &:hover {
+                    box-shadow: inset 0 0 17px 0 rgba(73, 210, 247, 0.26);
+                }
+            }
+        }
+    }
+    .right {
+        height: 100%;
+        width: calc(100% - 200px);
+        margin-left: 200px;
+        .table {
+            height: calc(100% - 50px);
+            .el-input__inner {
+                border: 0;
+            }
+        }
+        .el-tag {
+            margin: 2px;
+            padding: 0 2px;
+        }
+    }
+    .fengye {
+        height: 50px;
+        text-align: center;
+        width: 100%;
+        position: relative;
+        .btn {
+            position: absolute;
+            bottom: 15px;
+            right: 20px;
+            height: 30px;
+            width: 50px;
+            background: #01172F;
+            border: 1px solid #087193;
+            box-shadow: inset 0 0 10px 0 rgba(98, 208, 248, 0.42);
+            border-radius: 1px;
+            padding: 0;
+        }
+    }
+}
+</style>
+<script>
+import {
+    getSessionStore,
+    setSessionStore,
+} from '../../assets/js/mUtils'
+
+export default {
+    data() {
+            return {
+                tableloading: true,
+                tableList: [],
+                schemalist: [],
+                columndata: {}, // 选中的表信息
+                tartable: {},
+                isDone: false, //  is column box commited
+                pagetotal: 1,
+                pagesize: 20,
+                currentPage: 1,
+                schemaName: '',
+                schemaId: 1,
+                schemaIndex: 1,
+                storeInfo: {
+                    resourceid: 0,
+                    curPage: 1,
+                    schemaName: '',
+                    schemaId: 0,
+                    schemaIndex: 0,
+                    lastPath: {
+                        resource: '',
+                        schema: '',
+                        table: ''
+                    }
+                }
+            }
+        },
+        mounted() {
+            if (!sessionStorage.applyedit) setSessionStore('applyedit', this.storeInfo); // 初始化
+            this.storeInfo.resourceid = this.$route.query.resourceid;
+            var flag = this.$route.query.flag;
+            var that = this;
+
+            // schema list
+            $.ajax({
+                url: `${this.$store.state.common.ip}/dataResources/v1.0/findSchemaList/${this.$route.params.id}`, // 暂时使用1
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    if (data.code === 200) {
+                        that.schemalist = data.data;
+                        if (data.data.length > 0) {
+                            setTimeout(function() {
+                                if (flag) {
+                                    var obj = getSessionStore('applyedit');
+                                    console.log(obj)
+                                    that.getTableList(obj.schemaName, obj.schemaId, obj.schemaIndex);
+                                } else {
+                                    that.getTableList(that.schemalist[0].schemaName, that.schemalist[0].dataSourceId, 0);
+                                };
+                            }, 100)
+                        }
+                        that.tableloading = false;
+                    }
+                },
+                error: function(err) {
+                    console.log(err)
+                }
+            });
+        },
+        methods: {
+            // 获取table列表
+            getTableList(schemaName, schemaId, schemaIndex = 0) { // table list
+                this.schemaName = schemaName;
+                this.schemaId = schemaId;
+                this.schemaIndex = schemaIndex;
+                console.log(schemaName, schemaId, schemaIndex)
+                $('#scm').children().eq(schemaIndex).addClass('on').siblings().removeClass('on'); // 展开目标schema
+
+                var that = this;
+                $.ajax({
+                    url: `${this.$store.state.common.ip}/dataResources/v1.0/findDataSourceTableList/${schemaId}/${schemaName}/${this.currentPage}/${this.pagesize}`,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.code === 200) {
+                            that.tableList = data.data.list;
+                            that.pagetotal = data.data.total;
+                        } else {
+                            that.tableList = []
+                        }
+                    }
+                });
+            },
+            // 编辑table信息
+            editTable(row) {
+                this.storeInfo = $.extend(this.storeInfo, {
+                    resourceId: this.$route.params.id,
+                    curPage: this.currentPage,
+                    schemaName: this.schemaName,
+                    schemaId: this.schemaId,
+                    schemaIndex: this.schemaIndex,
+                    lastPath: {
+                        schema: this.schemaName,
+                        table: row.tableName
+                    }
+                })
+                setSessionStore('applyedit', this.storeInfo);
+
+                this.$router.push({
+                    path: '/dcp/resource/applytable/' + row.id,
+                })
+            },
+
+            handleCurrentChange(val) {
+                this.currentPage = val;
+                setSessionStore('applyedit', $.extend(getSessionStore('applyedit'), {
+                    curPage: val
+                }))
+
+                this.getTableList(this.schemaName, this.schemaId, this.schemaIndex);
+            },
+            gettype(i) {
+                //  var color = [null, 'gray', 'primary', 'success', 'warning', 'danger'];
+                //  return color[i % 6];
+                return 'success'
+            },
+            goBack() {
+                this.$router.push({
+                    path: '/dcp/resource/apply',
+                })
+            }
+        },
+}
+</script>
