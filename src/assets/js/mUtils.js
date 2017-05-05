@@ -205,6 +205,17 @@ export const removeSessionStore = name => {
  * 删除localStorage
  */
 export const removeStore = name => {
-    if (!name) return;
-    window.localStorage.removeItem(name);
+        if (!name) return;
+        window.localStorage.removeItem(name);
+    }
+    /**
+     * 将对象的key和value拼接成字符串
+     */
+export const keyPlusvalue = (obj) => {
+    if (typeof obj !== 'object') return;
+    let temparr = [];
+    for (let key in obj) {
+        temparr.push(`${key}:${obj[key]}`);
+    }
+    return temparr;
 }

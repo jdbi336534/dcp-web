@@ -6,15 +6,17 @@ import App from './App'
 import store from './store/'
 import router from './router'
 import ElementUI from 'element-ui'
+import ECharts from 'vue-echarts/components/ECharts.vue'
 // import 'element-ui/lib/theme-default/index.css'
 import './assets/css/theme/index.css'
-
+import './assets/css/date-picker.css'
+import './assets/css/breadcrumb.css'
 Vue.config.productionTip = false
 
 Vue.use(ElementUI)
 Vue.use(Vuex)
-
-/* eslint-disable no-new */
+Vue.component('chart', ECharts)
+    /* eslint-disable no-new */
 new Vue({
     el: '#app',
     router,

@@ -43,6 +43,20 @@
                     </el-submenu>
                     <el-submenu index="5">
                         <template slot="title"><i class="icons s5"></i>综合运行监控</template>
+                        <el-menu-item-group>
+                            <el-menu-item index="/dcp/monitor/node">节点</el-menu-item>
+                            <el-menu-item index="/dcp/monitor/virtualNode">虚拟节点</el-menu-item>
+                            <el-menu-item index="/dcp/monitor/serviceManager">服务管理</el-menu-item>
+                            <el-menu-item index="/dcp/monitor/serviceDiscovery">服务发现</el-menu-item>
+                            <el-menu-item index="/dcp/monitor/configurationManagement">配置管理</el-menu-item>
+                            <el-menu-item index="/dcp/monitor/monitors">监控</el-menu-item>
+                            <!-- <el-menu-item index="/dcp/system/logsManagement">日志管理</el-menu-item> -->
+                            <el-submenu index="1-4" class="dcp_submenu">
+                                <template slot="title">日志管理</template>
+                                <el-menu-item index="/dcp/monitor/offLinelogs">离线日志</el-menu-item>
+                                <el-menu-item index="/dcp/monitor/onLinelogs/pleasechoose">在线日志</el-menu-item>
+                            </el-submenu>
+                        </el-menu-item-group>
                     </el-submenu>
                     <el-submenu index="6">
                         <template slot="title"><i class="icons s6"></i>平台技术支撑</template>
@@ -253,6 +267,15 @@
                         }
                     }
                 }
+                .dcp_submenu {
+                    .el-submenu__title {
+                        height: 50px;
+                        line-height: 50px;
+                        font-size: 16px;
+                        text-indent: 40px;
+                        color: #24caf3!important;
+                    }
+                }
             }
         }
     }
@@ -283,6 +306,7 @@ export default {
         },
         methods: {
             handleSelectMenu(path) {
+                console.log(path);
                 this.$router.push({
                     path: path
                 })

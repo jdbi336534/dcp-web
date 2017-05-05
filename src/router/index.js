@@ -30,6 +30,19 @@ import department from '@/components/system/department'
 import organ from '@/components/system/organ'
 import region from '@/components/system/region'
 import tag from '@/components/system/tag'
+import node from '@/components/monitor/node'
+import nodedetails from '@/components/monitor/nodedetails'
+import serviceManager from '@/components/monitor/serviceManager'
+import servicedetails from '@/components/monitor/servicedetails'
+import virtualNode from '@/components/monitor/virtualNode'
+import virtualNodelookup from '@/components/monitor/virtualNodelookup'
+import serviceDiscovery from '@/components/monitor/serviceDiscovery'
+import configurationManagement from '@/components/monitor/configurationManagement'
+import logsManagement from '@/components/monitor/logsManagement'
+import monitors from '@/components/monitor/monitor'
+import offLinelogs from '@/components/monitor/offLinelogs'
+import onLinelogs from '@/components/monitor/onLinelogs'
+// import securityfrom '@/components/monitor/security'
 
 Vue.use(Router)
 
@@ -171,6 +184,60 @@ export default new Router({
                 path: 'tag',
                 name: 'tag',
                 component: tag
+            }]
+        }, {
+            path: 'monitor',
+            name: 'monitor',
+            component: blackroute,
+            redirect: { name: 'node' },
+            children: [{
+                path: 'node',
+                name: 'node',
+                component: node
+            }, {
+                path: 'nodedetails/:ip',
+                name: 'nodedetails',
+                component: nodedetails
+            }, {
+                path: 'serviceManager',
+                name: 'serviceManager',
+                component: serviceManager
+            }, {
+                path: 'servicedetails/:ip',
+                name: 'servicedetails',
+                component: servicedetails
+            }, {
+                path: 'virtualNode',
+                name: 'virtualNode',
+                component: virtualNode
+            }, {
+                path: 'virtualNodelookup/:node/:flag/:fatherip',
+                name: 'virtualNodelookup',
+                component: virtualNodelookup
+            }, {
+                path: 'serviceDiscovery',
+                name: 'serviceDiscovery',
+                component: serviceDiscovery
+            }, {
+                path: 'configurationManagement',
+                name: 'configurationManagement',
+                component: configurationManagement
+            }, {
+                path: 'logsManagement',
+                name: 'logsManagement',
+                component: logsManagement
+            }, {
+                path: 'monitors',
+                name: 'monitors',
+                component: monitors
+            }, {
+                path: 'offLinelogs',
+                name: 'offLinelogs',
+                component: offLinelogs
+            }, {
+                path: 'onLinelogs/:pod',
+                name: 'onLinelogs',
+                component: onLinelogs
             }]
         }]
     }, {

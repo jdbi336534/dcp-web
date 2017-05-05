@@ -36,6 +36,24 @@ module.exports = {
                 }
             }
         },
+        proxyTable1: {
+            '/common': {
+                target: 'http://172.16.1.41:8090',
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/common': ''
+                }
+            }
+        },
+        proxyTable2: {
+            '/offlogs': {
+                target: 'http://172.16.1.41:8062',
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/offlogs': ''
+                }
+            }
+        },
         // CSS Sourcemaps off by default because relative paths are "buggy"
         // with this option, according to the CSS-Loader README
         // (https://github.com/webpack/css-loader#sourcemaps)
